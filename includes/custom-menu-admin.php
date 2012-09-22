@@ -51,7 +51,7 @@ class WFIM_Custom_Menu_Admin {
 	 */
 	function save( $menu_id, $menu_item_db_id, $args ) {
 		if ( ! $this->check_nonce() )
-			die( 'Security check' );
+			die( 'Error has occured.' );
 
 		$data_icons = isset( $_POST['menu-item-data-icon'] ) ? $_POST['menu-item-data-icon'] : '';
 		update_post_meta( $menu_item_db_id, '_menu_item_data_icon', sanitize_key( $data_icons[$menu_item_db_id] ) );

@@ -1,0 +1,48 @@
+table.form-table ul {
+	margin: 0;
+}
+ul#font_file_fields li span.remove {
+	color: #999;
+	cursor: pointer;
+}
+
+/* Font Codes */
+div#font_codes {
+	padding: 30px 0 0 0;
+}
+div#font_codes div.font_code {
+	border: 1px #ccc solid;
+	border-radius: 6px;
+	display: inline;
+	float: left;
+	margin: 0 12px 0 0;
+	width: 100px;
+}
+div#font_codes div.font_code div.preview {
+	font-size: 24px;
+	float: none;
+	height: 1em;
+	padding: 24px 0 16px 0;
+	text-align: center;
+	vertical-align: middle;
+}
+div#font_codes div.font_code div.code input {
+	display: block;
+	margin: 0 auto 6px auto;
+	text-align: center;
+	width: 90px;
+}
+div#font_codes div#add_code {
+	border: 1px #ccc dashed;
+}
+div#font_codes div#add_code div.preview {
+	padding: 0;
+}
+div#font_codes div#add_code div.preview a {
+	display: block;
+	font-size: 48px;
+	padding: 32px 0 14px 0;
+}
+p.submit {
+	clear: both;
+}

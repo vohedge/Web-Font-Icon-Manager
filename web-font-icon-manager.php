@@ -19,13 +19,14 @@ if ( is_admin() ) {
 	load_plugin_textdomain( 'web-font-icon-manager', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
 	// Include class file
+	include( WFIM_PLUGIN_DIR . 'includes/font-file-manager.php' );
 	include( WFIM_PLUGIN_DIR . 'includes/custom-menu-admin.php' );
 	include( WFIM_PLUGIN_DIR . 'includes/option-page.php' );
 
 	// Make Instance
+	$wfim['font_file_manager'] = new WFIM_Font_File_Manager();
 	$wfim['custom_menu_admin'] = new WFIM_Custom_Menu_Admin();
 	$wfim['opton_page'] = new WFIM_Option_Page();
 }
-
 
 ?>
