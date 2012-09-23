@@ -486,7 +486,7 @@ class Font_TrueType extends Font_Binary_Stream {
     if (!isset($this->data[$name])) {
       return null;
     }
-    
+
     if (!$key) {
       return $this->data[$name]->data;
     }

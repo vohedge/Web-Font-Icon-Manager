@@ -52,19 +52,8 @@ class WFIM_Option_Page {
 	function option_page() {
 		$options = $this->get_options();
 		extract( $options );
-
-		$font_url_fields = '';
-		$i = 0;
-		foreach ( $font_urls as $font_url ) {
-			if ( ! empty( $font_url ) ) {
-				$font_url_fields .= "<li><input type=\"text\" name=\"wfim_font_urls[]\" size=\"80\" value=\"" . $this->value( $font_url, false ) . "\" />";
-				$font_url_fields .= $i ? "<span class=\"remove\"> X </span>" : "";
-				$font_url_fields .=	"</li>\n";
-			}
-			$i++;
-		}
-
-		$font_name = $this->get_font_info();
+		$t = $fonts;
+		$test = $t;
 ?>
 <div class="wrap">
 <div class="icon32" id="icon-themes"><br></div>
@@ -95,7 +84,7 @@ class WFIM_Option_Page {
 <tr valign="top">
 <th scope="row"><?php _e( 'Select font', 'web-font-icon-manager' ); ?></th>
 <td>
-<span>*Upload Fonts*</span>
+<?php WFIM_Font_File_Manager::font_list( $fonts ); ?>
 </td>
 </tr>
 <tr valign="top">
@@ -127,8 +116,7 @@ class WFIM_Option_Page {
 		extract( $options );
 		update_option( 'wfim_default_css', $default_css );
 		update_option( 'wfim_default_js', $default_js );
-		update_option( 'wfim_font_urls', $font_urls );
-		update_option( 'wfim_font_codes', $font_codes );
+		update_option( 'wfim_fonts', $fonts );
 	}
 
 	/**
@@ -161,30 +149,19 @@ class WFIM_Option_Page {
 		$p = $_POST;
 		$default_css = ! empty( $_POST['wfim_default_css'] ) ? 1 : 0;
 		$default_js = ! empty( $_POST['wfim_default_js'] ) ? 1 : 0;
-		$font_urls = ! empty( $_POST['wfim_font_urls'] ) ? $_POST['wfim_font_urls'] : '';
-		$font_codes = ! empty( $_POST['wfim_font_codes'] ) ? $_POST['wfim_font_codes'] : '';
+		$fonts = ! empty( $_POST['wfim_fonts'] ) ? $_POST['wfim_fonts'] : '';
 
-		if ( is_array( $font_urls ) ) {
-			$_font_urls = array();
-			foreach ( $font_urls as $font_url )
-				$_font_urls[] = esc_url( $font_url );
+		if ( is_array( $fonts ) ) {
+			$_fonts = array();
+			foreach ( $fonts as $font )
+				$_fonts[] = esc_html( $font );
 
-			$font_url = array_filter( $_font_urls );
+			$fonts = array_filter( $_fonts );
 		} else {
-			$font_urls = array( $font_urls );
+			$fonts = array( esc_html( $fonts ) );
 		}
 
-		if ( is_array( $font_codes ) ) {
-			$_font_codes = array();
-			foreach ( $font_codes as $font_code )
-				$_font_codes[] = esc_attr( $font_code );
-
-			$font_codes = array_filter( $_font_codes );
-		} else {
-			$font_codes = array( $font_codes );
-		}
-
-		return compact( 'default_css', 'default_js', 'font_urls', 'font_codes' );
+		return compact( 'default_css', 'default_js', 'fonts' );
 	}
 
 	/**
@@ -195,9 +172,8 @@ class WFIM_Option_Page {
 	function get_options() {
 		$default_css = get_option( 'wfim_default_css' );
 		$default_js = get_option( 'wfim_default_js' );
-		$font_urls = get_option( 'wfim_font_urls' );
-		$font_codes = get_option( 'wfim_font_codes' );
-		return compact( 'default_css', 'default_js', 'font_urls', 'font_codes' );
+		$fonts = get_option( 'wfim_fonts' );
+		return compact( 'default_css', 'default_js', 'fonts' );
 	}
 
 	/**
@@ -221,30 +197,6 @@ class WFIM_Option_Page {
 
 		elseif ( $value && ! $echo )
 			return $value;
-	}
-
-	/**
-	 * Get font info
-	 *
-	 * @return array
-	 */
-	function get_font_info( $font_file = '' ) {
-		$font_file = '/home/noah/workspace/my_projects/plugin_dev/wp-content/plugins/web-font-icon-manager/fonts/TinyIconFont.woff';
-
-		if ( ! class_exists( 'Font' ) )
-			return;
-
-		if ( ! file_exists( $font_file ) )
-			return;
-
-		$font = Font::load( $font_file );
-		if ( $font instanceof Font_TrueType_Collection )
-			$font = $font->getFont(0);
-
-		$font->parse();
-		$records = $font->getData( 'name', 'records' );
-
-		return $records[3];
 	}
 
 	/**
