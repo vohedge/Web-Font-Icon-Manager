@@ -1,14 +1,12 @@
 <?php
-class WFIM_Option_Page {
+class WFIM_Option_Manager {
 	private $plugin_dir_url;
 	private $font_ext2type;
 
 	function __construct() {
 		$this->plugin_dir_url = WFIM_PLUGIN_URL;
 		$this->font_ext2type = array( 'ttf', 'woff', 'svg', 'eot' );
-		add_filter( 'ext2type', array( &$this, 'add_ext2type' ) );
-		add_filter( 'upload_mimes', array( &$this, 'add_minetype' ) );
-		add_action( 'admin_menu', array( &$this, add_submenu ) );
+		add_action( 'admin_menu', array( &$this, 'add_submenu') );
 		add_action( 'admin_print_scripts-appearance_page_wfim_option', array( &$this, 'add_option_js' ) );
 		add_action( 'admin_print_styles-appearance_page_wfim_option', array( &$this, 'add_option_css' ) );
 		add_action( 'init', array( &$this, 'save_options' ) );
@@ -19,9 +17,7 @@ class WFIM_Option_Page {
 	 *
 	 * @return void
 	 */
-	function add_option_js() {
-		wp_enqueue_script( 'thickbox' );
-		wp_enqueue_script('media-upload');
+	public function add_option_js() {
 		wp_enqueue_script( 'wfim_option_page', $this->plugin_dir_url . 'js/web-font-icon-manager-option-page.js', array( 'jquery' ), '0.1', true );
 	}
 
@@ -30,8 +26,7 @@ class WFIM_Option_Page {
 	 *
 	 * @return void
 	 */
-	function add_option_css() {
-		wp_enqueue_style('thickbox');
+	public function add_option_css() {
 		wp_enqueue_style( 'wfim_option_page', $this->plugin_dir_url . 'css/web-font-icon-manager-option-page.css', '0.1', true );
 	}
 
@@ -40,7 +35,7 @@ class WFIM_Option_Page {
 	 *
 	 * @return void
 	 */
-	function add_submenu() {
+	public function add_submenu() {
 		add_submenu_page( 'themes.php', __( 'Web Font Icon', 'web-font-icon-manager' ), __( 'Icon', 'web-font-icon-manager' ), 'update_themes', 'wfim_option', array( &$this, 'option_page' ) ); 
 	}
 
@@ -49,7 +44,7 @@ class WFIM_Option_Page {
 	 *
 	 * @return void
 	 */
-	function option_page() {
+	public function option_page() {
 		$options = $this->get_options();
 		extract( $options );
 		$t = $fonts;
@@ -108,7 +103,7 @@ class WFIM_Option_Page {
 	 *
 	 * @return void
 	 */
-	function save_options() {
+	public function save_options() {
 		if ( ! $this->pre_save_security_check() )
 			return;
 
@@ -124,7 +119,7 @@ class WFIM_Option_Page {
 	 *
 	 * @return boolen 
 	 */
-	function pre_save_security_check() {
+	private function pre_save_security_check() {
 		if ( ! isset( $_REQUEST['wfim_option_page'] ) )
 			return false;
 
@@ -145,7 +140,7 @@ class WFIM_Option_Page {
 	 *
 	 * @return array
 	 */
-	function post_data_prepare() {
+	private function post_data_prepare() {
 		$p = $_POST;
 		$default_css = ! empty( $_POST['wfim_default_css'] ) ? 1 : 0;
 		$default_js = ! empty( $_POST['wfim_default_js'] ) ? 1 : 0;
@@ -169,7 +164,7 @@ class WFIM_Option_Page {
 	 *
 	 * @return array
 	 */
-	function get_options() {
+	private function get_options() {
 		$default_css = get_option( 'wfim_default_css' );
 		$default_js = get_option( 'wfim_default_js' );
 		$fonts = get_option( 'wfim_fonts' );
@@ -181,7 +176,7 @@ class WFIM_Option_Page {
 	 *
 	 * @return void
 	 */
-	function checked( $value ) {
+	private function checked( $value ) {
 		if ( $value )
 			echo 'checked=checked ';
 	}
@@ -191,7 +186,7 @@ class WFIM_Option_Page {
 	 *
 	 * @return void or string
 	 */
-	function value( $value, $echo ) {
+	private function value( $value, $echo ) {
 		if ( $value && $echo )
 			echo esc_html( $value );
 
@@ -200,23 +195,16 @@ class WFIM_Option_Page {
 	}
 
 	/**
-	 * Add extention of font files to wordpress
+	 * Get icons to active
 	 *
-	 * @return void
+	 * @return mixed
 	 */
-	function add_ext2type( $ext2type ) {
-		array_push( $ext2type['font'], $this->font_ext2type );
-		return $ext2type;
-	}
+	static public function get_active_fonts() {
+		$icons = get_option( 'wfim_fonts', true );
+		if ( empty( $icons ) || ! is_array( $icons ) )
+			$icons = false;
 
-	/** 
-	 * Add mine type of font files to wordpress
-	 *
-	 * @return void
-	 */
-	function add_minetype( $mimes ) {
-		$mimes['ttf|woff|svg|eot'] = 'application/octet-stream';
-		return( $mimes );
+		return $icons;
 	}
 }
 

@@ -3,10 +3,10 @@ include( WFIM_PLUGIN_DIR . 'lib/php-font-lib/classes/font.cls.php' );
 
 class WFIM_Font_File_Manager {
 	const post_type = 'wfim_fonts';
-	private $allow_ext;
+	const ext_list = 'ttf,woff,otf,svg,eot';
+	const ext_list_has_codepoints = 'ttf,woff';
 
 	function __construct() {
-		$this->allow_ext = array( 'ttf', 'woff', 'svg', 'eot' );
 		$this->errors = array();
 		$this->messages = array();
 		add_action( 'init', array( &$this, 'register_post_type' ) );
@@ -68,7 +68,7 @@ class WFIM_Font_File_Manager {
 		$font_name = $pathinfo['filename'];
 		$ext = $pathinfo['extension'];
 		// Code point test
-		$code_points = ( $ext == 'ttf' || $ext == 'woff' || $ext == 'otf' ) ? $this->get_code_points( $file_path ) : '';
+		$code_points = ( $ext == 'ttf' || $ext == 'woff' || $ext == 'otf' ) ? $this->get_code_points_from_font( $file_path ) : '';
 		$this->create_font_post( $font_name, $ext, $file_name, $file_path, $url, $code_points );
 	}
 
@@ -103,7 +103,8 @@ class WFIM_Font_File_Manager {
 
 		// Check Extention
 		$ext = ltrim( strrchr( $_FILES['font_file']['name'], '.' ), '.' );
-		if ( in_array( $this->allow_ext, $ext ) )
+		$ext_approved = self::get_approved_ext_list();
+		if ( ! in_array( $ext, $ext_approved ) )
 			return false;
 
 		return true;
@@ -128,6 +129,7 @@ class WFIM_Font_File_Manager {
 		
 		// Check same name file
 		$file_name = $this->sanitize_file_name( $file['name'] );
+		$file_name = str_replace( '-', '_', $file_name );
 		$new_file = $uploads_dir . $file_name;
 		if ( file_exists( $new_file ) )
 			$this->info( __( "Same name file was overwritten.", 'web-font-icon-manager' ) );
@@ -211,7 +213,7 @@ class WFIM_Font_File_Manager {
 	 *
 	 * @return mixid
 	 */
-	function get_code_points( $font_file_path ) {
+	private function get_code_points_from_font( $font_file_path ) {
 		if ( ! class_exists( 'Font' ) )
 			return '';
 
@@ -255,7 +257,7 @@ class WFIM_Font_File_Manager {
 		return array_unique( $code_points );
 	}
 
-	function delete_font() {
+	private function delete_font() {
 		// Check before delete action
 		$id = isset( $_GET['post'] ) ? $_GET['post'] : 0;
 
@@ -291,7 +293,7 @@ class WFIM_Font_File_Manager {
 	 *
 	 * @return boolen false
 	 */
-	function error( $err_message ) {
+	private function error( $err_message ) {
 		array_push( $this->errors, $err_message );
 		return false;
 	}
@@ -301,7 +303,7 @@ class WFIM_Font_File_Manager {
 	 *
 	 * @return boolen false
 	 */
-	function info( $message ) {
+	private function info( $message ) {
 		array_push( $this->messages, $message );
 		return false;
 	}
@@ -315,24 +317,7 @@ class WFIM_Font_File_Manager {
 		if ( ! is_array( $saved_fonts ) )
 			$saved_fonts = array();
 
-		// Get font info
-		$args = array(
-			'numberposts'     => -1,
-			'offset'          => 0,
-			'orderby'         => 'post_date',
-			'order'           => 'DESC',
-			'post_type'       => self::post_type,
-			'post_status'     => 'publish'
-		);
-		$_fonts = get_posts( $args ); 
-		foreach ( $_fonts as $font ) {
-			$file_type = get_post_meta( $font->ID, 'file_type', true ); 
-			$url = get_post_meta( $font->ID, 'url', true ); 
-			$code_points = get_post_meta( $font->ID, 'code_points', true ); 
-			$fonts[$font->post_title][$file_type]['id'] = $font->ID;
-			$fonts[$font->post_title][$file_type]['url'] = $url;
-			$fonts[$font->post_title][$file_type]['code_points'] = $code_points;
-		}
+		$fonts = self::get_fonts();
 		
 		// Show font list
 		$output = '';
@@ -350,7 +335,7 @@ class WFIM_Font_File_Manager {
 			$output .= "\tfont-style: normal;\n";
 			$output .= "\tfont-variant: normal;\n";
 			foreach ( $types as $type => $args ) {
-				if ( $type == 'ttf' ) $output .= "\tsrc: url('{$args[url]}') format('truetype');";
+				if ( $type == 'ttf' ) $output .= "\tsrc: url('{$args['url']}') format('truetype');";
 			}
 			$output .= "}\nul.$font { font-family: \"$font\"; }\n";
 			$output .= "</style>\n";
@@ -383,6 +368,108 @@ class WFIM_Font_File_Manager {
 			$output .= "</ul>\n</div>\n";
 		}
 		echo $output;
+	}
+
+	/**
+	 * Get fonts info from db
+	 *
+	 * @return mixed
+	 */
+	static public function get_fonts() {
+		$fonts = '';
+		$args = array(
+			'numberposts'     => -1,
+			'offset'          => 0,
+			'orderby'         => 'post_date',
+			'order'           => 'DESC',
+			'post_type'       => self::post_type,
+			'post_status'     => 'publish'
+		);
+		$_fonts = get_posts( $args ); 
+		if ( empty( $_fonts ) || ! is_array( $_fonts ) )
+			return false;
+
+		foreach ( $_fonts as $font ) {
+			$file_type = get_post_meta( $font->ID, 'file_type', true ); 
+			$url = get_post_meta( $font->ID, 'url', true ); 
+			$code_points = get_post_meta( $font->ID, 'code_points', true ); 
+			$fonts[$font->post_title][$file_type]['id'] = $font->ID;
+			$fonts[$font->post_title][$file_type]['url'] = $url;
+			$fonts[$font->post_title][$file_type]['code_points'] = $code_points;
+		}
+
+		if ( empty ( $font_name ) || ! in_array( $font_name, $fonts ) )
+			return $fonts;
+
+		return $fonts[$font_name];
+	}
+
+	/**
+	 * Get a font info from db
+	 *
+	 * @return mixed
+	 */
+	static public function get_font( $font_name ) {
+		$fonts = self::get_fonts();
+		if ( empty( $fonts ) )
+			return false;
+
+		if ( empty ( $font_name ) || ! array_key_exists( $font_name, $fonts ) )
+			return false;
+
+		return $fonts[$font_name];
+	}
+
+	/**
+	 * Get code points of specific font form db
+	 *
+	 * @param $font_name string
+	 * @return mixed
+	 */
+	static public function get_code_points( $font_name ) {
+		if ( empty( $font_name ) )
+			return false;
+		
+		$font = self::get_font( $font_name );
+		if ( empty( $font ) )
+			return false;
+
+		foreach ( array( 'ttf', 'woff' ) as $type ) {
+			if ( isset( $font[$type] ) && isset( $font[$type]['code_points']) )
+				return $font[$type]['code_points'];
+		}
+
+		return false;
+	}
+
+	/** 
+	 * Get url of font file
+	 *
+	 * @param string $font_name 
+	 * @return array
+	 */
+	static public function get_urls( $font_name ) {
+		$font = self::get_font( $font_name );
+		if ( empty( $font ) || ! is_array( $font ) )
+			return false;
+		
+		$urls = array();
+		$exts = self::get_approved_ext_list();
+		foreach( $exts as $ext ) {
+			if ( ! empty ( $font[$ext]['url'] ) )
+				$urls[$ext] = $font[$ext]['url'];
+		}
+
+		return $urls;
+	}
+
+	/**
+	 * Get approved ext list
+	 *
+	 * @return array
+	 */
+	static private function get_approved_ext_list() {
+		return explode( ',', self::ext_list );
 	}
 }	
 ?>

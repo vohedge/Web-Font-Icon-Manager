@@ -4,8 +4,9 @@ class WFIM_Custom_Menu_Admin {
 
 	function __construct() {
 		$this->plugin_dir_url = WFIM_PLUGIN_URL;
-		add_action( 'admin_print_scripts-nav-menus.php', array( &$this, 'admin_print_scripts' ) );
 		add_action( 'wp_update_nav_menu_item', array( &$this, 'save' ), 10, 3 );
+		add_action( 'admin_print_scripts-nav-menus.php', array( &$this, 'admin_print_scripts' ) );
+		add_action( 'admin_print_styles-nav-menus.php', array( &$this, 'admin_print_styles' ) );
 	}
 
 	/**
@@ -14,29 +15,22 @@ class WFIM_Custom_Menu_Admin {
 	 * @return void
 	 */
 	function admin_print_scripts() {
-		$this->add_js();
-		$this->pass_the_meta_to_js();
-		$this->pass_nonce_value_to_js();
-	}
-	/**
-	 * Add javascript file and localize variable
-	 *
-	 * @return void
-	 */
-	function add_js() {
 		wp_enqueue_script( 'wfim_custom_menu', $this->plugin_dir_url . 'js/web-font-icon-manager-custom-menu.js', array( 'jquery' ), '0.1', true );
-		wp_localize_script( 'wfim_custom_menu', 'wfim_cm_i18n', $this->js_i18n() );
+		wp_localize_script( 'wfim_custom_menu', 'wfim_cm_i18n', WFIM_Icon_Manager::js_i18n() );
+		$this->pass_the_meta_to_js();
+		WFIM_Icon_Manager::pass_the_code_points_to_js();
+		WFIM_Icon_Manager::add_icon_selector_js();
+		$this->pass_nonce_value_to_js();
 	}
 
 	/**
-	 * Return javascript localization variable
-	 *
-	 * @return array 'english message'=>'transrated message'
+	 * Add css into head on "Menu" admin screen
+	 * 
+	 * @return void
 	 */
-	function js_i18n() {
-		return array(
-			'Icon' => __( 'Icon', 'web-font-icon-manager' )
-		);
+	function admin_print_styles() {
+		WFIM_Icon_Manager::at_font_face();
+		WFIM_Icon_Manager::add_icon_selector_styles();
 	}
 
 	/**
@@ -51,10 +45,12 @@ class WFIM_Custom_Menu_Admin {
 	 */
 	function save( $menu_id, $menu_item_db_id, $args ) {
 		if ( ! $this->check_nonce() )
-			die( 'Error has occured.' );
+			return;
 
-		$data_icons = isset( $_POST['menu-item-data-icon'] ) ? $_POST['menu-item-data-icon'] : '';
-		update_post_meta( $menu_item_db_id, '_menu_item_data_icon', sanitize_key( $data_icons[$menu_item_db_id] ) );
+		$code_point = isset( $_POST['menu-item-data-icon'] ) ? $_POST['menu-item-data-icon'] : '';
+		$font_name = isset( $_POST['menu-item-data-icon-class'] ) ? $_POST['menu-item-data-icon-class'] : '';
+		update_post_meta( $menu_item_db_id, '_menu_item_data_icon', sanitize_key( $code_point[$menu_item_db_id] ) );
+		update_post_meta( $menu_item_db_id, '_menu_item_data_icon_class', sanitize_key( $font_name[$menu_item_db_id] ) );
 	}
 
 	/**
@@ -103,17 +99,24 @@ class WFIM_Custom_Menu_Admin {
 		$items = wp_get_nav_menu_items( $nav_menu_selected_id, $args );
 
 		$data_icons = array();
+		$font_names = array();
 		foreach ( $items as $item ) {
 			$data_icon = get_post_meta( $item->ID, '_menu_item_data_icon', true );
-			if ( ! empty( $data_icon ) )
+			$font_name = get_post_meta( $item->ID, '_menu_item_data_icon_class', true );
+			if ( ! empty( $data_icon ) ) 
 				$data_icons[] = "\t" . $item->ID . ':"' . esc_js( $data_icon ) . '"';
+			if ( ! empty( $font_name ) ) 
+				$font_names[] = "\t" . $item->ID . ':"' . esc_js( $font_name ) . '"';
 		}
 
 		if ( ! empty( $data_icons ) ) {
 ?>
 <script>
 var menu_item_data_icons = { 
-<?php echo implode( ",\n", $data_icons) . "\n"; ?>
+<?php echo implode( ",\n", $data_icons ) . "\n"; ?>
+}
+var menu_item_data_icons_classes = { 
+<?php echo implode( ",\n", $font_names ) . "\n"; ?>
 }
 </script>
 <?php
@@ -143,4 +146,4 @@ var menu_item_data_icons = {
 		return $nav_menu_selected_id;
 	}
 }
-?>
+

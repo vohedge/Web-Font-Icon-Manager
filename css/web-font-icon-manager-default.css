@@ -1,0 +1,7 @@
+.icon:before, span.icon {
+	display: inline-block;
+	margin-right: 0.2em;
+	speak: none;
+	text-align: center;
+	width: 1em;	
+}
