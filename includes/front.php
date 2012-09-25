@@ -6,6 +6,7 @@ class WFIM_Front {
 		add_action( 'wp_print_scripts', array( &$this, 'add_default_js' ) );
 		add_action( 'wp_print_scripts', array( &$this, 'add_default_css' ) );
 		add_filter( 'wp_nav_menu_args', array( &$this, 'change_default_menu_walker' ) );
+		add_filter( 'wp_page_menu_args', array( &$this, 'fix_no_menu_warning' ) );
 		add_filter( 'widget_categories_args', array( &$this, 'change_category_widget' ) );
 	}
 
@@ -44,6 +45,25 @@ class WFIM_Front {
 	function change_default_menu_walker( $args ) {
 		$args = (object) $args;
 		$args->walker = new WFIM_Walker_Nav_Menu_With_Icon();
+		return $args;
+	}
+
+	/**
+	 * Fix worning when no menu is set
+	 *
+	 * When no menu is set, wp_nav_men() calls wp_page_menu() with same arguments
+	 * to show page list instead of custom menu.
+	 * Then wp_page_menu() uses WFIM_Walker_Nav_Menu_With_Icon class.
+	 * WFIM_Walker_Nav_Menu_With_Icon is created to show custom menu with icon.
+	 * So worning is occured.
+	 * This method fix the problem.
+	 *
+	 * @return array
+	 */
+	function fix_no_menu_warning( $args ) {
+		if ( get_class( $args['walker'] ) == 'WFIM_Walker_Nav_Menu_With_Icon' )
+			$args['walker'] = null;
+
 		return $args;
 	}
 
