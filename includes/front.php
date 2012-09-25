@@ -3,7 +3,7 @@ include( WFIM_PLUGIN_DIR . 'includes/walker-classes.php' );
 
 class WFIM_Front {
 	function __construct() {
-		add_action( 'wp_print_scripts', array( &$this, 'add_default_js' ) );
+		add_action( 'wp_head', array( &$this, 'add_default_js' ) );
 		add_action( 'wp_print_scripts', array( &$this, 'add_default_css' ) );
 		add_filter( 'wp_nav_menu_args', array( &$this, 'change_default_menu_walker' ) );
 		add_filter( 'wp_page_menu_args', array( &$this, 'fix_no_menu_warning' ) );
@@ -20,7 +20,6 @@ class WFIM_Front {
 			return;
 
 		WFIM_Icon_Manager::at_font_face();
-		wp_enqueue_style( 'wfim_default', WFIM_PLUGIN_URL . 'css/web-font-icon-manager-default.css', '0.1', true );
 	}
 
 	/**
