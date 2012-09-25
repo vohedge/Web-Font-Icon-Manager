@@ -29,6 +29,11 @@ class WFIM_Front {
 	 * @return void
 	 */
 	function add_default_js() {
+?>
+<!--[if lt IE 8]>
+<script type="text/javascript" src="<?php echo WFIM_PLUGIN_URL . 'js/web-font-manager-ie67-fix.js'; ?>"></script>
+<![endif]-->
+<?php
 	}
 
 	/**

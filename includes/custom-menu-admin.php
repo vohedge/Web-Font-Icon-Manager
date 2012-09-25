@@ -1,9 +1,6 @@
 <?php
 class WFIM_Custom_Menu_Admin {
-	private $plugin_dir_url;
-
 	function __construct() {
-		$this->plugin_dir_url = WFIM_PLUGIN_URL;
 		add_action( 'wp_update_nav_menu_item', array( &$this, 'save' ), 10, 3 );
 		add_action( 'admin_print_scripts-nav-menus.php', array( &$this, 'admin_print_scripts' ) );
 		add_action( 'admin_print_styles-nav-menus.php', array( &$this, 'admin_print_styles' ) );
@@ -15,7 +12,7 @@ class WFIM_Custom_Menu_Admin {
 	 * @return void
 	 */
 	function admin_print_scripts() {
-		wp_enqueue_script( 'wfim_custom_menu', $this->plugin_dir_url . 'js/web-font-icon-manager-custom-menu.js', array( 'jquery' ), '0.1', true );
+		wp_enqueue_script( 'wfim_custom_menu', WFIM_PLUGIN_URL . 'js/web-font-icon-manager-custom-menu.js', array( 'jquery' ), '0.1', true );
 		wp_localize_script( 'wfim_custom_menu', 'wfim_cm_i18n', WFIM_Icon_Manager::js_i18n() );
 		$this->pass_the_meta_to_js();
 		WFIM_Icon_Manager::pass_the_code_points_to_js();
@@ -29,7 +26,7 @@ class WFIM_Custom_Menu_Admin {
 	 * @return void
 	 */
 	function admin_print_styles() {
-		WFIM_Icon_Manager::at_font_face();
+		WFIM_Icon_Manager::at_font_face( true );
 		WFIM_Icon_Manager::add_icon_selector_styles();
 	}
 
@@ -37,6 +34,8 @@ class WFIM_Custom_Menu_Admin {
 	 * Save "data-icon" as meta data with custom menu
 	 *
 	 * All the params come from hook 'wp_update_nav_menu_item'
+	 * 
+	 * @TODO Data check
 	 *
 	 * @param integer $menu_id
 	 * @param integer $menu_item_db_id
@@ -49,8 +48,8 @@ class WFIM_Custom_Menu_Admin {
 
 		$code_point = isset( $_POST['menu-item-data-icon'] ) ? $_POST['menu-item-data-icon'] : '';
 		$font_name = isset( $_POST['menu-item-data-icon-class'] ) ? $_POST['menu-item-data-icon-class'] : '';
-		update_post_meta( $menu_item_db_id, '_menu_item_data_icon', sanitize_key( $code_point[$menu_item_db_id] ) );
-		update_post_meta( $menu_item_db_id, '_menu_item_data_icon_class', sanitize_key( $font_name[$menu_item_db_id] ) );
+		update_post_meta( $menu_item_db_id, '_menu_item_data_icon', $code_point[$menu_item_db_id] );
+		update_post_meta( $menu_item_db_id, '_menu_item_data_icon_class', $font_name[$menu_item_db_id] );
 	}
 
 	/**

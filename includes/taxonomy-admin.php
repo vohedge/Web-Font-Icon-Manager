@@ -2,6 +2,7 @@
 class WFIM_Taxonomy_Admin {
 	function __construct() {
 		add_action ( 'init', array( &$this, 'add_icon_fields') );
+		add_action ( 'init', array( &$this, 'save') );
 		add_action ( 'admin_print_scripts-edit-tags.php', array( &$this, 'admin_print_scripts' ) );
 		add_action ( 'admin_print_styles-edit-tags.php', array( &$this, 'admin_print_styles' ) );
 	}
@@ -41,10 +42,6 @@ class WFIM_Taxonomy_Admin {
 		}
 		if ( isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === $taxonomy )
 			add_action ( 'edit_tag_form_fields', array( &$this, 'add_icon_field') );
-		
-		// Save Actions
-		add_action ( 'edited_term', array( &$this, 'save' ), 10, 1 );
-		add_action ( 'create_term', array( &$this, 'save' ), 10, 1 );
 	}
 
 	/**
@@ -102,11 +99,21 @@ class WFIM_Taxonomy_Admin {
 	}
 
 	/**
+	 * Save icon info as category/tag/taxonomy post meta
+	 *
+	 * @return void
+	 */
+	function save() {
+		add_action ( 'edited_term', array( &$this, 'save_meata_data' ), 10, 1 );
+		add_action ( 'create_term', array( &$this, 'save_meata_data' ), 10, 1 );
+	}
+
+	/**
 	 * Save term meta data
 	 *
 	 * @return void
 	 */
-	function save( $term_id ) {
+	function save_meata_data( $term_id ) {
 		$nonce = $_REQUEST['web-font-icon-manager-nonce'];
 		if ( ! wp_verify_nonce( $nonce, 'web-font-icon-save') )
 			return false;

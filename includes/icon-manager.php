@@ -1,10 +1,5 @@
 <?php
 class WFIM_Icon_Manager {
-
-	function __construct() {
-		// Nothing
-	}
-
 	/** 
 	 * Add icon selector css js
 	 *
@@ -72,11 +67,17 @@ class WFIM_Icon_Manager {
 
 	/**
 	 * Show @font-face
-	 *
+	 * 
+	 * @param boolen to show all fonts into @font-fase set this true
 	 * @return void
 	 */
-	static public function at_font_face() {
-		$fonts = WFIM_Option_Manager::get_active_fonts();
+	static public function at_font_face( $show_all = false ) {
+		if ( $show_all ) {
+			$fonts = WFIM_Font_File_Manager::get_fonts();
+			$fonts = array_keys( $fonts );
+		} else {
+			$fonts = WFIM_Option_Manager::get_active_fonts();
+		}
 		if ( empty( $fonts ) )
 			return;
 		
@@ -155,8 +156,8 @@ class WFIM_Icon_Manager {
 			$output .= ".icon-" . esc_html( $font_name ) . "{\n";
 			$output .= "\tfont-family: \"" . esc_html( $font_name ) . "\";\n";
 			$output .= "}\n";
-			$output .= ".icon:before {\n\tcontent: attr(data-icon);\n}\n";
 		}
+		$output .= "span.i, .icon:before {\n\tcontent: attr(data-icon);\n}\n";
 		$output .= "</style>\n";
 		echo $output;
 	}

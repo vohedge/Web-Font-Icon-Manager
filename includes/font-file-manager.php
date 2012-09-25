@@ -22,7 +22,7 @@ class WFIM_Font_File_Manager {
 		$args = array(
 			'label' => 'fonts',
 			'description' => 'Web Font Icon Manager plugin use this post type',
-			'public' => true,
+			'public' => false,
 			'capability_type' => 'post',
 			'hierarchical' => false,
 			'supports' => array( 'title' )
@@ -327,19 +327,6 @@ class WFIM_Font_File_Manager {
 			if ( in_array( $font, $saved_fonts ) )
 				$checked = ' checked="checked"';
 
-			// CSS @font-face
-			$output .= "<style type=\"text/css\">\n";
-			$output .= "@font-face {\n";
-			$output .= "\tfont-family: \"$font\";\n";
-			$output .= "\tfont-weight: normal;\n";
-			$output .= "\tfont-style: normal;\n";
-			$output .= "\tfont-variant: normal;\n";
-			foreach ( $types as $type => $args ) {
-				if ( $type == 'ttf' ) $output .= "\tsrc: url('{$args['url']}') format('truetype');";
-			}
-			$output .= "}\nul.$font { font-family: \"$font\"; }\n";
-			$output .= "</style>\n";
-
 			// Font name and type
 			$output .= "<div id=\"font_list\"><div class=\"font_name\"><label><input type=\"checkbox\" name=\"wfim_fonts[]\" value=\"$font\" $checked/> $font</label>";
 			foreach ( $types as $type => $args ) {
@@ -358,11 +345,13 @@ class WFIM_Font_File_Manager {
 			$output .= "</ul>\n";
 
 			// Preview
-			$output .= "<ul class=\"preview $font\">\n";
+			$output .= "<ul class=\"preview icon-$font\">\n";
 			foreach ( $types as $type => $args ) {
 				if ( ( $type == 'ttf' || $type == 'woff' ) && isset( $args['code_points'] ) && is_array( $args['code_points'] ) ) {
-					foreach( $args['code_points'] as $code_point ) 
+					foreach( $args['code_points'] as $code_point ) {
 						$output .= "<li>&#$code_point;</li>\n";
+					}
+					break;
 				}
 			}
 			$output .= "</ul>\n</div>\n";

@@ -1,10 +1,8 @@
 <?php
 class WFIM_Option_Manager {
-	private $plugin_dir_url;
 	private $font_ext2type;
 
 	function __construct() {
-		$this->plugin_dir_url = WFIM_PLUGIN_URL;
 		$this->font_ext2type = array( 'ttf', 'woff', 'svg', 'eot' );
 		add_action( 'admin_menu', array( &$this, 'add_submenu') );
 		add_action( 'admin_print_scripts-appearance_page_wfim_option', array( &$this, 'add_option_js' ) );
@@ -18,7 +16,7 @@ class WFIM_Option_Manager {
 	 * @return void
 	 */
 	public function add_option_js() {
-		wp_enqueue_script( 'wfim_option_page', $this->plugin_dir_url . 'js/web-font-icon-manager-option-page.js', array( 'jquery' ), '0.1', true );
+		wp_enqueue_script( 'wfim_option_page', WFIM_PLUGIN_URL . 'js/web-font-icon-manager-option-page.js', array( 'jquery' ), '0.1', true );
 	}
 
 	/**
@@ -27,7 +25,8 @@ class WFIM_Option_Manager {
 	 * @return void
 	 */
 	public function add_option_css() {
-		wp_enqueue_style( 'wfim_option_page', $this->plugin_dir_url . 'css/web-font-icon-manager-option-page.css', '0.1', true );
+		WFIM_Icon_Manager::at_font_face( true );
+		wp_enqueue_style( 'wfim_option_page', WFIM_PLUGIN_URL . 'css/web-font-icon-manager-option-page.css', '0.1', true );
 	}
 
 	/**
