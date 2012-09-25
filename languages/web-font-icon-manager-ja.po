@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: web-font-icon-manager\n"
-"POT-Creation-Date: 2012-10-02 19:02+0900\n"
-"PO-Revision-Date: 2012-10-02 19:02+0900\n"
+"POT-Creation-Date: 2012-10-06 20:47+0900\n"
+"PO-Revision-Date: 2012-10-06 20:47+0900\n"
 "Last-Translator: Noah Kobayashi <vohedge@gmail.com>\n"
 "Language-Team: \n"
 "Language: Japanese\n"
@@ -16,9 +16,9 @@ msgstr ""
 "X-Poedit-SearchPath-0: wp-content/plugins/web-font-icon-manager\n"
 "X-Poedit-SearchPath-1: wp-content/plugins/web-font-icon-manager/includes\n"
 
-#: wp-content/plugins/web-font-icon-manager/includes/taxonomy-admin.php:87
+#: wp-content/plugins/web-font-icon-manager/includes/taxonomy-admin.php:101
 #: wp-content/plugins/web-font-icon-manager/includes/icon-manager.php:30
-#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:38
+#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:39
 msgid "Icon"
 msgstr "アイコン"
 
@@ -27,84 +27,97 @@ msgid "Select Icon"
 msgstr "アイコンを選択"
 
 #: wp-content/plugins/web-font-icon-manager/includes/icon-manager.php:32
+#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:394
 msgid "Please upload font file."
 msgstr "フォントファイルをアップロードしてください。"
 
-#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:38
-#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:54
+#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:39
+#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:56
 msgid "Web Font Icon"
 msgstr "WEBフォントアイコン"
 
-#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:62
+#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:64
 msgid "Add font File"
 msgstr "フォントファイルを追加"
 
-#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:65
+#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:67
 msgid "Upload"
 msgstr "アップロード"
 
-#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:66
+#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:68
 msgid "Upload necessary files (.eot, .woff, .tff, .svg)"
 msgstr "必要なファイルをアップロードします（.eot, .woff, .tff, .svg）"
 
-#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:79
+#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:81
 msgid "Select font"
 msgstr "フォントを選択"
 
-#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:85
+#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:87
+msgid "Where to use"
+msgstr "有効にする場所"
+
+#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:90
+msgid "Appearance"
+msgstr ""
+
+#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:90
+msgid "Menus"
+msgstr ""
+
+#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:103
 msgid "Options"
 msgstr "オプション"
 
-#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:88
+#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:106
 msgid "Use default css"
 msgstr "デフォルトのCSSを使用する"
 
-#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:89
+#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:107
 msgid "Use default js for IE6,7"
 msgstr "IE6,7用のデフォルトJavascriptを使用する"
 
-#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:94
+#: wp-content/plugins/web-font-icon-manager/includes/option-manager.php:112
 msgid "Save"
 msgstr "保存"
 
-#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:127
+#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:199
 msgid "Can't make fonts directory in /wp-content/uploads/"
-msgstr ""
+msgstr "/wp-content/uploads/ にディレクトリを作ることができません。"
 
-#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:135
+#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:207
 msgid "Same name file was overwritten."
 msgstr "同名のファイルが上書きされました。"
 
-#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:139
+#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:211
 msgid "The upload file could not move uploads directory."
 msgstr ""
 "アップロードしたファイルをuploadsディレクトリに保存することができません。"
 
-#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:202
+#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:274
 msgid "Can't Create font infomation record."
 msgstr "フォント情報を保存することができません。"
 
-#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:268
+#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:340
 msgid "Error has occured."
 msgstr ""
 
-#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:275
+#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:347
 msgid "Could not delete font file."
 msgstr "フォントファイルを削除することができません。"
 
-#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:282
+#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:354
 msgid "Could not delete font file record."
 msgstr "フォント情報を削除することができません。"
 
-#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:288
+#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:360
 msgid "Font file removing complete."
 msgstr "フォントファイルは削除されました。"
 
-#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:335
+#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:411
 msgid "File List"
 msgstr "ファイルリスト"
 
-#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:342
+#: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:418
 msgid "delete"
 msgstr "削除"
 
