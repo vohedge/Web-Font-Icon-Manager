@@ -107,9 +107,81 @@ class WFIM_Font_File_Manager {
 		if ( ! in_array( $ext, $ext_approved ) )
 			return false;
 
+		// Check file type
+		if ( ! self::check_font_file_type( $_FILES['font_file']['name'], $_FILES['font_file']['tmp_name'] ) )
+			return false;
+
 		return true;
 	}
 
+	/** 
+	 * Check font file type
+	 *
+	 * @return boolen
+	 */
+	private function check_font_file_type( $file_name, $file_path ) {
+		$ext = ltrim( strrchr( $file_name, '.' ), '.' );
+		$font = Font::load( $file_path );
+		if ( $font instanceof Font_TrueType && $ext == 'ttf' )
+			return true;
+
+		if ( $font instanceof Font_OpenType && $ext == 'otf' )
+			return true;
+
+		if ( $font instanceof Font_WOFF && $ext == 'woff' )
+			return true;
+
+		if ( $font instanceof Font_EOT && $ext == 'eot' )
+			return true;
+
+		if ( self::verify_svg_font( $file_path ) && $ext == 'svg' )
+			return true;
+	
+		return false;
+	}
+
+	/**
+	 * Verify svg font file
+	 *
+	 * Return true if the file is svg font file.
+	 *
+	 * @return boolen
+	 */
+	private function verify_svg_font( $file_path ) {
+		$font = simplexml_load_file( $file_path );
+		if ( ! isset( $font->defs->font->{'font-face'} ) )
+			return false;
+
+		if ( ! isset( $font->defs->font->glyph ) )
+			return false;
+
+		if ( ! isset( $font->defs->font->{'missing-glyph'} ) )
+			return false;
+
+		return true;
+	}
+
+	/**
+	 * Parse svg font format
+	 *
+	 * This method was not used.
+	 *
+	 * @TODO How convert code point value
+	 * @return boolen
+	 */
+	private function parse_svg_font_file( $file_path ) {
+		$font = simplexml_load_file( $file_path );
+		$font = json_decode( json_encode( $font ), true );
+		$glyphs = $font['defs']['font']['glyph'];
+		$code_points = array();
+		foreach ( $glyphs as $glyph ) {
+			if ( empty( $glyph['@attributes']['unicode'] ) )
+				continue;
+
+			$code_point = $glyph['@attributes']['unicode'];
+			// $code_points[] = bin2hex( $code_point );
+		}
+	}
 
 	/**
 	 * Save posted file to font directory
