@@ -1,8 +1,8 @@
 <?php
 class WFIM_Taxonomy_Admin {
 	function __construct() {
-		add_action ( 'init', array( &$this, 'add_icon_fields'), 9999 );
 		add_action ( 'init', array( &$this, 'save') );
+		add_action ( 'init', array( &$this, 'add_icon_fields'), 9999 );
 		add_action ( 'admin_print_scripts-edit-tags.php', array( &$this, 'admin_print_scripts' ) );
 		add_action ( 'admin_print_styles-edit-tags.php', array( &$this, 'admin_print_styles' ) );
 	}
@@ -12,36 +12,50 @@ class WFIM_Taxonomy_Admin {
 	 *
 	 * @return void
 	 */
-	function add_icon_fields() {
-		// Get Taxonomies
-		$args = array(
-			'public'   => true,
-			'_builtin' => false
-		); 
-		$taxonomies = get_taxonomies( $args );
+	public function add_icon_fields() {
+		$use_in = get_option( 'wfim_use_in' ); 
+		$use_in = isset( $use_in['taxonomy'] ) && is_array( $use_in['taxonomy'] ) ? $use_in['taxonomy'] : array();
 
-		/**
-		 * Add fields
-		 */
-		// Category
-		add_action ( 'category_add_form_fields', array( &$this, 'add_icon_field') );
-		add_action ( 'edit_category_form_fields', array( &$this, 'add_icon_field') );
-		
-		// Tag
-		add_action ( 'add_tag_form_fields', array( &$this, 'add_icon_field') );
-		if ( isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === 'post_tag' )
-			add_action ( 'edit_tag_form_fields', array( &$this, 'add_icon_field') );
+		foreach ( $use_in as $post_type => $taxonomies ) {
+			foreach ( $taxonomies as $taxonomy => $v ) {
+				// Category
+				if ( $post_type == 'post' && $taxonomy == 'category' && $v ) {
+					add_action ( 'category_add_form_fields', array( &$this, 'add_icon_field') );
+					add_action ( 'edit_category_form_fields', array( &$this, 'add_icon_field') );
+					continue;
+				}
 
-		// Link
-		// add_action( @TODO );	
-		// add_action ( 'edit_link_category_form_fields', array( &$this, 'add_icon_field') );
+				// Tag
+				if ( $post_type == 'post' && $taxonomy == 'post_tag' && $v ) {
+					add_action ( 'add_tag_form_fields', array( &$this, 'add_icon_field') );
+					if ( isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === 'post_tag' )
+						add_action ( 'edit_tag_form_fields', array( &$this, 'add_icon_field') );
+					continue;
+				}
 
-		// Custom Taxonomy
-		foreach ( $taxonomies as $taxonomy ) {
-			add_action ( $taxonomy . '_add_form_fields', array( &$this, 'add_icon_field') );
+				// Custom taxonomy in 'post' post_type
+				if ( isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] == $taxonomy && ! isset( $_GET['post_type'] ) && $post_type == 'post' && $v ) {
+					add_action ( $taxonomy . '_add_form_fields', array( &$this, 'add_icon_field') );
+				}
+				if ( isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] == $taxonomy
+					&& isset( $_GET['post_type'] ) && $_GET['post_type'] == $post_type && $post_type == 'post' && $v ) {
+					add_action ( 'edit_tag_form_fields', array( &$this, 'add_icon_field') );
+					continue;
+				}
+
+				// Custom taxonomy in custom post_type
+				if ( isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] == $taxonomy && isset( $_GET['post_type'] ) && $_GET['post_type'] == $post_type && $v ) {
+					add_action ( $taxonomy . '_add_form_fields', array( &$this, 'add_icon_field') );
+					add_action ( 'edit_tag_form_fields', array( &$this, 'add_icon_field') );
+					continue;
+				}
+
+				// Link
+				// add_action( @TODO );	
+				// add_action ( 'edit_link_category_form_fields', array( &$this, 'add_icon_field') );
+			}
 		}
-		if ( isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === $taxonomy )
-			add_action ( 'edit_tag_form_fields', array( &$this, 'add_icon_field') );
+
 	}
 
 	/**
