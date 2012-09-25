@@ -1,7 +1,7 @@
 <?php
 class WFIM_Taxonomy_Admin {
 	function __construct() {
-		add_action ( 'init', array( &$this, 'add_icon_fields') );
+		add_action ( 'init', array( &$this, 'add_icon_fields'), 9999 );
 		add_action ( 'init', array( &$this, 'save') );
 		add_action ( 'admin_print_scripts-edit-tags.php', array( &$this, 'admin_print_scripts' ) );
 		add_action ( 'admin_print_styles-edit-tags.php', array( &$this, 'admin_print_styles' ) );
@@ -52,7 +52,6 @@ class WFIM_Taxonomy_Admin {
 	function admin_print_scripts() {
 		WFIM_Icon_Manager::pass_the_code_points_to_js();
 		WFIM_Icon_Manager::add_icon_selector_js();
-		wp_localize_script( 'wfim_icon_selector', 'wfim_cm_i18n', WFIM_Icon_Manager::js_i18n() );
 	}
 
 	/**

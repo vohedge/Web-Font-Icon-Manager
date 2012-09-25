@@ -122,7 +122,7 @@ class WFIM_Font_File_Manager {
 		// Create font directory
 		$uploads = wp_upload_dir();
 		$uploads_dir = $uploads['basedir'] . '/wfim_icon_fonts/';
-		if ( ! file_exists( $uploads_dir ) && ! is_dir( $uploads ) ) {
+		if ( ! file_exists( $uploads_dir ) && ! is_dir( $uploads_dir ) ) {
 			if ( ! mkdir( $uploads_dir, 0777, true ) )
 				return $this->error( __( "Can't make fonts directory in /wp-content/uploads/", 'web-font-icon-manager' ) );
 		}
@@ -318,6 +318,10 @@ class WFIM_Font_File_Manager {
 			$saved_fonts = array();
 
 		$fonts = self::get_fonts();
+		if ( empty( $fonts ) || ! is_array( $fonts ) ) {
+			_e( 'Please upload font file.', 'web-font-icon-manager' );
+			return;
+		}
 		
 		// Show font list
 		$output = '';

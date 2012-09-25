@@ -7,6 +7,7 @@ class WFIM_Icon_Manager {
 	 */
 	static public function add_icon_selector_js() {
 		wp_enqueue_script( 'wfim_icon_selector', WFIM_PLUGIN_URL . 'js/web-font-icon-manager-icon-selector.js', array( 'jquery', 'thickbox' ), '0.1', true );
+		wp_localize_script( 'wfim_icon_selector', 'wfim_cm_i18n', self::js_i18n() );
 	}
 
 	/** 
@@ -27,7 +28,8 @@ class WFIM_Icon_Manager {
 	static public function js_i18n() {
 		return array(
 			'Icon' => __( 'Icon', 'web-font-icon-manager' ),
-			'Select Icon' => __( 'Select Icon', 'web-font-icon-manager' )
+			'Select Icon' => __( 'Select Icon', 'web-font-icon-manager' ),
+			'Please upload font file.' => __( 'Please upload font file.', 'web-font-icon-manager' )
 		);
 	}
 
@@ -38,6 +40,7 @@ class WFIM_Icon_Manager {
 	 */
 	static public function pass_the_code_points_to_js() {
 		$fonts = WFIM_Option_Manager::get_active_fonts();
+		$fonts = array_merge( array_diff( $fonts, array( '' ) ) );
 		if ( empty( $fonts ) )
 			return;
 
@@ -67,14 +70,20 @@ class WFIM_Icon_Manager {
 
 	/**
 	 * Show @font-face
+	 *
+	 * This method remove WP Multibyte Patch plugin's css from queue.
+	 * Because, the css is overide @font-face in admin screen.
 	 * 
 	 * @param boolen to show all fonts into @font-fase set this true
 	 * @return void
 	 */
 	static public function at_font_face( $show_all = false ) {
+		wp_dequeue_style( 'wpmp-admin-custom' );	
+
 		if ( $show_all ) {
 			$fonts = WFIM_Font_File_Manager::get_fonts();
-			$fonts = array_keys( $fonts );
+			if ( !empty( $fonts ) && is_array( $fonts ) )
+				$fonts = array_keys( $fonts );
 		} else {
 			$fonts = WFIM_Option_Manager::get_active_fonts();
 		}

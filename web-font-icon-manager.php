@@ -20,10 +20,10 @@ load_plugin_textdomain( 'web-font-icon-manager', false, dirname( plugin_basename
 include( WFIM_PLUGIN_DIR . 'includes/icon-manager.php' );
 include( WFIM_PLUGIN_DIR . 'includes/font-file-manager.php' );
 include( WFIM_PLUGIN_DIR . 'includes/option-manager.php' );
-include( WFIM_PLUGIN_DIR . 'includes/custom-menu-admin.php' );
-include( WFIM_PLUGIN_DIR . 'includes/taxonomy-admin.php' );
 
 if ( is_admin() ) {
+	include( WFIM_PLUGIN_DIR . 'includes/custom-menu-admin.php' );
+	include( WFIM_PLUGIN_DIR . 'includes/taxonomy-admin.php' );
 	new WFIM_Font_File_Manager();
 	new WFIM_Custom_Menu_Admin();
 	new WFIM_Taxonomy_Admin();

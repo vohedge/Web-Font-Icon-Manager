@@ -14,8 +14,10 @@ wfim_font_selector.prototype = {
 		jQuery( 'body' ).append( this.icon_set );
 	},
 	set_code_points : function() {
-		if ( ! wfim_fonts )
+		if ( typeof wfim_fonts == 'undefined') {
+			this.icon_set.append( '<p>' + wfim_cm_i18n['Please upload font file.'] + '</p>' );
 			return;
+		}
 
 		var fonts = wfim_fonts;
 		var code_points;

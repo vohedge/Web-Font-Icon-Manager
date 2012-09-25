@@ -13,7 +13,6 @@ class WFIM_Custom_Menu_Admin {
 	 */
 	function admin_print_scripts() {
 		wp_enqueue_script( 'wfim_custom_menu', WFIM_PLUGIN_URL . 'js/web-font-icon-manager-custom-menu.js', array( 'jquery' ), '0.1', true );
-		wp_localize_script( 'wfim_custom_menu', 'wfim_cm_i18n', WFIM_Icon_Manager::js_i18n() );
 		$this->pass_the_meta_to_js();
 		WFIM_Icon_Manager::pass_the_code_points_to_js();
 		WFIM_Icon_Manager::add_icon_selector_js();
