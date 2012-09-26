@@ -87,7 +87,6 @@ class WFIM_Option_Manager {
 <th scope="row"><?php _e( 'Where to use', 'web-font-icon-manager' ); ?></th>
 <td>
 <ul>
-<li><input type="checkbox" name="wfim_use_in[custom_menu]" <?php echo ! empty( $use_in['custom_menu'] ) ? 'checked="checked"' : ''; ?>/> <?php _e( 'Appearance' ); ?> &gt; <?php _e( 'Menus' ); ?></li>
 <?php
 		foreach ( $taxonomies_and_posttypes as $post_type => $taxonomies ) {
 			foreach ( $taxonomies as $taxonomy ) {
@@ -97,6 +96,8 @@ class WFIM_Option_Manager {
 			}
 		}
 ?>
+<li><input type="checkbox" name="wfim_use_in[custom_menu]" <?php echo ! empty( $use_in['custom_menu'] ) ? 'checked="checked"' : ''; ?>/> <?php _e( 'Appearance' ); ?> &gt; <?php _e( 'Menus' ); ?></li>
+</ul>
 </td>
 </tr>
 <tr valign="top">
@@ -320,4 +321,3 @@ class WFIM_Option_Manager {
 	}
 }
 
-?>

@@ -29,13 +29,31 @@ div#font_list ul.file_list {
 div#font_list ul li {
 	margin: 0;
 }
-div#font_list ul.preview li {
-	float: left;
-	font-size: 1.4em;
-	margin: 0 6px 0 0;
-}
 div#font_list ul.preview {
 	margin: 0 0 12px 0;
+	padding: 3px 0 0 0;
 	width: 100%;
 }
 div#font_list ul:after { content: ""; display: block; clear: both;}
+div#font_list ul.preview li {
+	border: 1px #ccc solid;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	float: left;
+	margin: 0 6px 6px 0;
+}
+div#font_list ul.preview li div.preview {
+	float: none;
+	font-size: 1.4em;
+	padding: 9px 0 6px 0;
+	text-align: center;
+	width: 60px;
+}
+div#font_list ul.preview li div.code_point {
+	color: #ccc;
+	font-size: 10px;
+	float: none;
+	text-align: center;
+	width: 60px;
+}
+

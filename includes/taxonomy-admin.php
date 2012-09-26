@@ -115,6 +115,7 @@ class WFIM_Taxonomy_Admin {
 <?php echo $mode == 'edit' ? '</th>' : ''; ?>
 <?php echo $mode == 'edit' ? '<td class="field-data-icon">' : '<div class="field-data-icon">'; ?>
 <input class="wfim_icon_select" value="アイコンを選択" type="button" style="width: auto" />
+<a class="wfim_delete_icon" href=""><?php _e( 'Delete', 'web-font-icon-manager' ); ?></a>
 <input type="hidden" name="wfim_code_point" id="wfim_code_point" class="data_icon" value="<?php if ( isset ( $code_point ) ) echo esc_html( $code_point ) ?>" />
 <input type="hidden" name="wfim_font_name" id="wfim_font_name" class="font_name" value="<?php if ( isset ( $font_name ) ) echo esc_html( $font_name ) ?>" />
 <input type="hidden" name="wfim_action" id="wfim_action" value="save" />

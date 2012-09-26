@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: web-font-icon-manager\n"
-"POT-Creation-Date: 2012-10-15 15:04+0900\n"
-"PO-Revision-Date: 2012-10-15 15:04+0900\n"
+"POT-Creation-Date: 2012-10-15 15:57+0900\n"
+"PO-Revision-Date: 2012-10-15 16:05+0900\n"
 "Last-Translator: Noah Kobayashi <vohedge@gmail.com>\n"
 "Language-Team: \n"
 "Language: Japanese\n"
@@ -27,6 +27,10 @@ msgid "Select Icon"
 msgstr "アイコンを選択"
 
 #: wp-content/plugins/web-font-icon-manager/includes/icon-manager.php:32
+msgid "Delete"
+msgstr "削除"
+
+#: wp-content/plugins/web-font-icon-manager/includes/icon-manager.php:33
 #: wp-content/plugins/web-font-icon-manager/includes/font-file-manager.php:395
 msgid "Please upload font file."
 msgstr "フォントファイルをアップロードしてください。"

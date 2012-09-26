@@ -29,6 +29,7 @@ class WFIM_Icon_Manager {
 		return array(
 			'Icon' => __( 'Icon', 'web-font-icon-manager' ),
 			'Select Icon' => __( 'Select Icon', 'web-font-icon-manager' ),
+			'Delete' => __( 'Delete', 'web-font-icon-manager' ),
 			'Please upload font file.' => __( 'Please upload font file.', 'web-font-icon-manager' )
 		);
 	}
