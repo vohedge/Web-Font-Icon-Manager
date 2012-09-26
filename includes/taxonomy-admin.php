@@ -3,8 +3,6 @@ class WFIM_Taxonomy_Admin {
 	function __construct() {
 		add_action ( 'init', array( &$this, 'save') );
 		add_action ( 'init', array( &$this, 'add_icon_fields'), 9999 );
-		add_action ( 'admin_print_scripts-edit-tags.php', array( &$this, 'admin_print_scripts' ) );
-		add_action ( 'admin_print_styles-edit-tags.php', array( &$this, 'admin_print_styles' ) );
 	}
 
 	/**
@@ -22,6 +20,7 @@ class WFIM_Taxonomy_Admin {
 				if ( $post_type == 'post' && $taxonomy == 'category' && $v ) {
 					add_action ( 'category_add_form_fields', array( &$this, 'add_icon_field') );
 					add_action ( 'edit_category_form_fields', array( &$this, 'add_icon_field') );
+					$this->add_styles_and_scripts();
 					continue;
 				}
 
@@ -30,16 +29,19 @@ class WFIM_Taxonomy_Admin {
 					add_action ( 'add_tag_form_fields', array( &$this, 'add_icon_field') );
 					if ( isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] === 'post_tag' )
 						add_action ( 'edit_tag_form_fields', array( &$this, 'add_icon_field') );
+					$this->add_styles_and_scripts();
 					continue;
 				}
 
 				// Custom taxonomy in 'post' post_type
 				if ( isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] == $taxonomy && ! isset( $_GET['post_type'] ) && $post_type == 'post' && $v ) {
 					add_action ( $taxonomy . '_add_form_fields', array( &$this, 'add_icon_field') );
+					$this->add_styles_and_scripts();
 				}
 				if ( isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] == $taxonomy
 					&& isset( $_GET['post_type'] ) && $_GET['post_type'] == $post_type && $post_type == 'post' && $v ) {
 					add_action ( 'edit_tag_form_fields', array( &$this, 'add_icon_field') );
+					$this->add_styles_and_scripts();
 					continue;
 				}
 
@@ -47,6 +49,7 @@ class WFIM_Taxonomy_Admin {
 				if ( isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] == $taxonomy && isset( $_GET['post_type'] ) && $_GET['post_type'] == $post_type && $v ) {
 					add_action ( $taxonomy . '_add_form_fields', array( &$this, 'add_icon_field') );
 					add_action ( 'edit_tag_form_fields', array( &$this, 'add_icon_field') );
+					$this->add_styles_and_scripts();
 					continue;
 				}
 
@@ -56,6 +59,16 @@ class WFIM_Taxonomy_Admin {
 			}
 		}
 
+	}
+
+	/**
+	 * Add styles and scripts for icon selector
+	 *
+	 * @return void
+	 */
+	private function add_styles_and_scripts() {
+		add_action ( 'admin_print_scripts-edit-tags.php', array( &$this, 'admin_print_scripts' ) );
+		add_action ( 'admin_print_styles-edit-tags.php', array( &$this, 'admin_print_styles' ) );
 	}
 
 	/**
@@ -104,6 +117,7 @@ class WFIM_Taxonomy_Admin {
 <input class="wfim_icon_select" value="アイコンを選択" type="button" style="width: auto" />
 <input type="hidden" name="wfim_code_point" id="wfim_code_point" class="data_icon" value="<?php if ( isset ( $code_point ) ) echo esc_html( $code_point ) ?>" />
 <input type="hidden" name="wfim_font_name" id="wfim_font_name" class="font_name" value="<?php if ( isset ( $font_name ) ) echo esc_html( $font_name ) ?>" />
+<input type="hidden" name="wfim_action" id="wfim_action" value="save" />
 <span class="icon_preview<?php if ( ! empty( $font_name ) ) echo ' icon-' . $font_name; ?>"><?php if ( ! empty( $code_point ) ) echo '&#' . $code_point . ';'; ?></span>
 <?php wp_nonce_field( 'web-font-icon-save', 'web-font-icon-manager-nonce' ) ?>
 <?php echo $mode == 'edit' ? '</td>' : '</div>'; ?>
@@ -127,8 +141,13 @@ class WFIM_Taxonomy_Admin {
 	 * @return void
 	 */
 	function save_meata_data( $term_id ) {
-		$nonce = $_REQUEST['web-font-icon-manager-nonce'];
-		if ( ! wp_verify_nonce( $nonce, 'web-font-icon-save') )
+		if ( isset( $_REQUEST['wfim_action'] ) && $_REQUEST['wfim_action'] != 'save' )
+			return false;
+
+		if ( ! isset( $_REQUEST['web-font-icon-manager-nonce'] ) )
+			return false;
+
+		if ( ! wp_verify_nonce( $_REQUEST['web-font-icon-manager-nonce'], 'web-font-icon-save') )
 			return false;
 
 		$code_point = isset( $_POST['wfim_code_point'] ) ? $_POST['wfim_code_point'] : '';

@@ -105,6 +105,7 @@ class WFIM_Option_Manager {
 <ul>
 <li><input type="checkbox" name="wfim_default_css" <?php echo $this->checked( $default_css ); ?>/> <?php _e( 'Use default css', 'web-font-icon-manager' ); ?></li>
 <li><input type="checkbox" name="wfim_default_js" <?php echo $this->checked( $default_js ); ?>/> <?php _e( 'Use default js for IE6,7', 'web-font-icon-manager' ); ?></li>
+</ul>
 </td>
 </tr>
 </tbody>
@@ -179,8 +180,8 @@ class WFIM_Option_Manager {
 	 */
 	private function get_post_type_labels() {
 		$post_type_labels = array();
-		$builtin_post_types = get_post_types( array( 'public' => true, '_builtin' => false ), 'object', 'and' );
-		$custom_post_types = get_post_types( array( 'public' => true, '_builtin' => true ), 'object', 'and' );
+		$builtin_post_types = get_post_types( array( '_builtin' => false ), 'object', 'and' );
+		$custom_post_types = get_post_types( array( '_builtin' => true ), 'object', 'and' );
 		$post_types = array_merge( $builtin_post_types, $custom_post_types );
 		foreach ( $post_types as $post_type )
 			$post_type_labels[$post_type->name] = $post_type->label;
