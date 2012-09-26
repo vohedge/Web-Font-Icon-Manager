@@ -22,12 +22,16 @@ include( WFIM_PLUGIN_DIR . 'includes/font-file-manager.php' );
 include( WFIM_PLUGIN_DIR . 'includes/option-manager.php' );
 
 if ( is_admin() ) {
-	include( WFIM_PLUGIN_DIR . 'includes/custom-menu-admin.php' );
+	$wfim['font_file_manager'] = new WFIM_Font_File_Manager();
+	$wfim['option_manager'] = new WFIM_Option_Manager();
+
+	$use_in = get_option( 'wfim_use_in' );
+	if ( ! empty( $use_in['custom_menu'] ) ) {
+		include( WFIM_PLUGIN_DIR . 'includes/custom-menu-admin.php' );
+		new WFIM_Custom_Menu_Admin();
+	}
 	include( WFIM_PLUGIN_DIR . 'includes/taxonomy-admin.php' );
-	new WFIM_Font_File_Manager();
-	new WFIM_Custom_Menu_Admin();
 	new WFIM_Taxonomy_Admin();
-	new WFIM_Option_Manager();
 } else {
 	include( WFIM_PLUGIN_DIR . 'includes/front.php' );
 	new WFIM_Front();
