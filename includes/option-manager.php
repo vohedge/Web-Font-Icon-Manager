@@ -8,7 +8,7 @@ class WFIM_Option_Manager {
 		add_action( 'admin_menu', array( &$this, 'add_submenu') );
 		add_action( 'admin_print_scripts-appearance_page_wfim_option', array( &$this, 'add_option_js' ) );
 		add_action( 'admin_print_styles-appearance_page_wfim_option', array( &$this, 'add_option_css' ) );
-		add_action( 'init', array( &$this, 'save_options' ) );
+		add_action( 'admin_init', array( &$this, 'save_options' ) );
 	}
 
 	/**
@@ -125,8 +125,8 @@ class WFIM_Option_Manager {
 	 * @return array
 	 */
 	private function get_taxonomies() {
-		$builtin_taxonomies = get_taxonomies( array( 'public' => true, '_builtin' => false ), 'object', 'and' );
-		$custom_taxonomies = get_taxonomies( array( 'public' => true, '_builtin' => true ), 'object', 'and' );
+		$builtin_taxonomies = get_taxonomies( array( 'public' => true, '_builtin' => true ), 'object', 'and' );
+		$custom_taxonomies = get_taxonomies( array( '_builtin' => false ), 'object', 'and' );
 		$taxonomies = array_merge( $builtin_taxonomies, $custom_taxonomies );
 		// unset( $taxonomies['post_tag'] );
 		unset( $taxonomies['post_format'] );
@@ -181,8 +181,8 @@ class WFIM_Option_Manager {
 	 */
 	private function get_post_type_labels() {
 		$post_type_labels = array();
-		$builtin_post_types = get_post_types( array( '_builtin' => false ), 'object', 'and' );
-		$custom_post_types = get_post_types( array( '_builtin' => true ), 'object', 'and' );
+		$builtin_post_types = get_post_types( array( 'public' => true, '_builtin' => true ), 'object', 'and' );
+		$custom_post_types = get_post_types( array( '_builtin' => false ), 'object', 'and' );
 		$post_types = array_merge( $builtin_post_types, $custom_post_types );
 		foreach ( $post_types as $post_type )
 			$post_type_labels[$post_type->name] = $post_type->label;

@@ -217,7 +217,8 @@ class WFIM_Font_File_Manager {
 		@ chmod( $new_file, $perms );
 
 		// Get URL
-		$url = $uploads['baseurl'] . "/wfim_icon_fonts/$file_name";
+		$url = str_replace( ABSPATH, '', $new_file );
+		$url = site_url( $url );
 
 		// File Path
 		$file_path = $new_file;
