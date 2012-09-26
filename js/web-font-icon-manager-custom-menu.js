@@ -5,6 +5,7 @@ var AddExtraMenuOption = function() {
 	this.menu_items = jQuery( '#menu-to-edit>li' );
 	this.init();
 	this.new_menu();
+	this.delete_icon();
 }
 AddExtraMenuOption.prototype = {
 	get_menu_id : function( j ) {
@@ -28,9 +29,10 @@ AddExtraMenuOption.prototype = {
 				field += self.i18n['Icon'] + '<br />'
 				field += '</label>';
 				field += '<input type="button" class="wfim_icon_select" value="' + self.i18n['Select Icon'] + '" />';
+				field += ' <a style="font-style:normal" class="wfim_delete_icon" href="">' + self.i18n['Delete'] + '</a>';
+				field += '<span class="icon_preview' + class_name+ '">' + data_icon + '</span>';
 				field += '<input type="hidden" id="edit-menu-iteme-data-icon-' + id + '" class="widefat code data_icon" name="menu-item-data-icon[' + id + ']" value="' + code_point + '" />';
 				field += '<input type="hidden" id="edit-menu-iteme-data-icon-class-' + id + '" class="widefat code font_name" name="menu-item-data-icon-class[' + id + ']" value="' + font_name + '" />';
-				field += '<span class="icon_preview' + class_name+ '">' + data_icon + '</span>';
 				field += '</p>';
 				j.find( 'div.menu-item-settings>p.field-css-classes' ).after( field );
 			}
@@ -44,6 +46,12 @@ AddExtraMenuOption.prototype = {
 	},
 	update_menu_item : function() {
 		this.menu_items = jQuery( '#menu-to-edit>li' );
+	},
+	delete_icon : function() {
+		jQuery( 'a.wfim_delete_icon' ).click( function() {
+			jQuery( this ).closest( 'p.field-data-icon' ).children( 'span.icon_preview' ).removeClass().addClass( 'icon_preview' ).text( '' );
+			return false;
+		});
 	}
 }
 

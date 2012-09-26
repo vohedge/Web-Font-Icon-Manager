@@ -426,7 +426,7 @@ class WFIM_Font_File_Manager {
 			foreach ( $types as $type => $args ) {
 				if ( ( $type == 'ttf' || $type == 'woff' ) && isset( $args['code_points'] ) && is_array( $args['code_points'] ) ) {
 					foreach( $args['code_points'] as $code_point ) {
-						$output .= "<li>&#$code_point;</li>\n";
+						$output .= "<li><div class=\"preview\">&#$code_point;</div><div class=\"code_point\">u+$code_point</div></li>\n";
 					}
 					break;
 				}

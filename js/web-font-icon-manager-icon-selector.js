@@ -7,6 +7,7 @@ var wfim_font_selector = function() {
 	this.insert_code_point();
 	this.remove_after_insert();
 	this.thick_box_height_fix();
+	this.delete_icon();
 }
 wfim_font_selector.prototype = {
 	init : function() {
@@ -70,6 +71,12 @@ wfim_font_selector.prototype = {
 		var tb_window_height = jQuery( '#TB_window' ).height();
 		var tb_title_height = jQuery( '#TB_title' ).height();
 		jQuery( '#TB_ajaxContent' ).height( tb_window_height - tb_title_height - 18 );
+	},
+	delete_icon : function() {
+		jQuery( 'a.wfim_delete_icon' ).click( function() {
+			jQuery( this ).closest( 'div.field-data-icon' ).children( 'span.icon_preview' ).removeClass().addClass( 'icon_preview' ).text( '' );
+			return false;
+		});
 	}
 }
 
