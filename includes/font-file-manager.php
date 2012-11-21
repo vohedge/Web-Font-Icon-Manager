@@ -193,6 +193,9 @@ class WFIM_Font_File_Manager {
 
 		// Create font directory
 		$uploads = wp_upload_dir();
+		if ( ! empty( $uploads['error'] ) )
+			return $this->error( __( "Can't make fonts directory in /wp-content/uploads/", 'web-font-icon-manager' ) );
+
 		$uploads_dir = $uploads['basedir'] . '/wfim_icon_fonts/';
 		$uploads_dir = apply_filters( 'wfim_upload_dir', $uploads_dir );
 		if ( ! file_exists( $uploads_dir ) && ! is_dir( $uploads_dir ) ) {

@@ -45,15 +45,34 @@ class WFIM_Option_Manager {
 	 * @return void
 	 */
 	public function option_page() {
+		global $wfim;
 		$options = $this->get_options();
 		extract( $options );
 		$taxonomies_and_posttypes = $this->get_post_type_and_taxonomies();
 		$taxonomy_labels = $this->get_taxonomy_labels();
 		$post_type_labels = $this->get_post_type_labels();
+
+		$msg_output = '';
+		$errors =  $wfim['font_file_manager']->errors;
+		if ( ! empty( $errors ) && is_array( $errors ) ) {
+			$msg_output .= '<div id="message" class="updated below-h2">';
+			foreach( $errors as $error )
+				$msg_output .= '<p>' . esc_html( $error ) . '</p>';
+			$msg_output .= '</div>';
+		}	
+		$messages =  $wfim['font_file_manager']->messages;
+		if ( ! empty( $messages ) && is_array( $messages ) ) {
+			$msg_output .= '<div id="message" class="updated below-h2">';
+			foreach( $messages as $message )
+				$msg_output .= '<p>' . esc_html( $error ) . '</p>';
+			$msg_output .= '</div>';
+		}	
 ?>
 <div class="wrap">
 <div class="icon32" id="icon-themes"><br></div>
 <h2><?php _e( 'Web Font Icon', 'web-font-icon-manager' ); ?></h2>
+
+<?php echo $msg_output; ?>
 
 <form action="" method="post" enctype="multipart/form-data">
 <input type="hidden" name="wfim_option_page_action" value="font_upload" />
