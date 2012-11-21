@@ -64,7 +64,7 @@ class WFIM_Option_Manager {
 		if ( ! empty( $messages ) && is_array( $messages ) ) {
 			$msg_output .= '<div id="message" class="updated below-h2">';
 			foreach( $messages as $message )
-				$msg_output .= '<p>' . esc_html( $error ) . '</p>';
+				$msg_output .= '<p>' . esc_html( $message ) . '</p>';
 			$msg_output .= '</div>';
 		}	
 ?>
