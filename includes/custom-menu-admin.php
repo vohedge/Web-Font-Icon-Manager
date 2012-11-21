@@ -95,6 +95,8 @@ class WFIM_Custom_Menu_Admin {
 			'update_post_term_cache' => false
 		);
 		$items = wp_get_nav_menu_items( $nav_menu_selected_id, $args );
+		if ( empty( $items ) )
+			return;
 
 		$data_icons = array();
 		$font_names = array();
