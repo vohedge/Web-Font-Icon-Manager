@@ -115,7 +115,7 @@ class WFIM_Icon_Manager {
 				if ( $url_num == $i )
 					$output .= "\tsrc: ";
 
-				$output .= "url('" . esc_url( $urls['woff'] ) . "') format('woff')";
+				$output .= "\turl('" . esc_url( $urls['woff'] ) . "') format('woff')";
 				if ( $i > 1 )
 					$output .= ",\n";
 				else
@@ -128,7 +128,7 @@ class WFIM_Icon_Manager {
 				if ( $url_num == $i )
 					$output .= "\tsrc: ";
 
-				$output .= "url('" . esc_url( $urls['ttf'] ) . "') format('truetype')";
+				$output .= "\turl('" . esc_url( $urls['ttf'] ) . "') format('truetype')";
 				if ( $i > 1 )
 					$output .= ",\n";
 				else
@@ -141,7 +141,7 @@ class WFIM_Icon_Manager {
 				if ( $url_num == $i )
 					$output .= "\tsrc: ";
 
-				$output .= "url('" . esc_url( $urls['otf'] ) . "') format('opentype')";
+				$output .= "\turl('" . esc_url( $urls['otf'] ) . "') format('opentype')";
 				if ( $i > 1 )
 					$output .= ",\n";
 				else
@@ -163,11 +163,12 @@ class WFIM_Icon_Manager {
 			}
 			
 			$output .= "}\n";
-			$output .= ".icon-" . esc_html( $font_name ) . "{\n";
+			$output .= ".icon-" . esc_html( $font_name ) . ":before,\n";
+			$output .= ".icon-" . esc_html( $font_name ) . " span.i {\n";
 			$output .= "\tfont-family: \"" . esc_html( $font_name ) . "\";\n";
+			$output .= "\tcontent: attr(data-icon);\n";
 			$output .= "}\n";
 		}
-		$output .= "span.i, .icon:before {\n\tcontent: attr(data-icon);\n}\n";
 		$output .= "</style>\n";
 		echo $output;
 	}
